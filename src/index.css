@@ -4,51 +4,137 @@
 
 @layer base {
   body {
-    @apply bg-space-900 text-white;
+    @apply bg-astronaut-900 text-gray-100;
   }
 
   h1 {
-    @apply text-3xl font-bold;
+    @apply text-4xl font-bold text-gray-50;
   }
 
   h2 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-semibold text-gray-100;
   }
 
   h3 {
-    @apply text-xl font-semibold;
+    @apply text-lg font-semibold text-gray-200;
   }
 }
 
 @layer components {
+  /* Premium Card System */
+  .card-base {
+    @apply bg-astronaut-700 border border-astronaut-600 rounded-2xl p-4 shadow-card transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply card-base hover:border-neon-blue hover:shadow-glow-blue cursor-pointer;
+  }
+
+  .card-premium {
+    @apply card-base shadow-card-lg border-neon-blue border-opacity-30;
+  }
+
+  /* Panel System */
   .panel {
-    @apply bg-space-800 border border-space-700 rounded-lg p-6 shadow-lg;
+    @apply bg-astronaut-800 border border-astronaut-600 rounded-2xl p-6 shadow-card-lg;
   }
 
-  .card {
-    @apply bg-space-700 border border-space-600 rounded-lg p-4 shadow;
+  .panel-glass {
+    @apply panel backdrop-blur-sm;
   }
 
-  .metric-box {
-    @apply flex flex-col items-center p-4 bg-space-700 rounded-lg border border-space-600;
+  .panel-accent {
+    @apply panel border-l-2 border-l-neon-blue shadow-glow-blue;
   }
 
+  /* Button System */
   .btn-primary {
-    @apply px-6 py-2 bg-debris-info hover:bg-blue-600 rounded-lg font-medium transition-colors;
+    @apply px-4 py-2 bg-neon-blue hover:bg-blue-600 text-white rounded-xl font-medium transition-all duration-200 flex items-center gap-2 hover:shadow-glow-blue;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 bg-astronaut-600 hover:bg-astronaut-500 text-gray-200 rounded-xl font-medium transition-all duration-200 flex items-center gap-2;
   }
 
   .btn-success {
-    @apply px-6 py-2 bg-debris-success hover:bg-green-600 rounded-lg font-medium transition-colors;
+    @apply px-4 py-2 bg-status-success hover:bg-green-500 text-white rounded-xl font-medium transition-all duration-200 flex items-center gap-2;
   }
 
   .btn-danger {
-    @apply px-6 py-2 bg-debris-danger hover:bg-red-600 rounded-lg font-medium transition-colors;
+    @apply px-4 py-2 bg-status-danger hover:bg-red-500 text-white rounded-xl font-medium transition-all duration-200 flex items-center gap-2;
   }
 
-  .text-sm-light {
-    @apply text-xs text-gray-400;
+  .btn-warning {
+    @apply px-4 py-2 bg-status-warning hover:bg-amber-500 text-white rounded-xl font-medium transition-all duration-200 flex items-center gap-2;
+  }
+
+  /* Text Utilities */
+  .text-muted {
+    @apply text-gray-400;
+  }
+
+  .text-secondary {
+    @apply text-gray-300;
+  }
+
+  .text-accent {
+    @apply text-neon-blue;
+  }
+
+  /* Status Badges */
+  .badge-success {
+    @apply px-3 py-1 bg-status-success bg-opacity-20 text-status-success rounded-lg text-sm font-medium border border-status-success border-opacity-30;
+  }
+
+  .badge-warning {
+    @apply px-3 py-1 bg-status-warning bg-opacity-20 text-status-warning rounded-lg text-sm font-medium border border-status-warning border-opacity-30;
+  }
+
+  .badge-danger {
+    @apply px-3 py-1 bg-status-danger bg-opacity-20 text-status-danger rounded-lg text-sm font-medium border border-status-danger border-opacity-30;
+  }
+
+  .badge-info {
+    @apply px-3 py-1 bg-neon-blue bg-opacity-20 text-neon-blue rounded-lg text-sm font-medium border border-neon-blue border-opacity-30;
+  }
+
+  /* Metric Card */
+  .metric-card {
+    @apply card-base flex flex-col items-center justify-center p-6 text-center hover:shadow-glow-blue;
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    @apply w-full bg-astronaut-600 rounded-full h-2 overflow-hidden;
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-astronaut-600;
   }
 }
+
+/* Animations */
+@layer utilities {
+  @keyframes glow {
+    0%, 100% { @apply shadow-glow-blue; }
+    50% { @apply shadow-glow-blue; }
+  }
+
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+}
+
 
 /* Animations */
 @keyframes pulse-glow {
