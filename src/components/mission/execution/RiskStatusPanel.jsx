@@ -93,7 +93,10 @@ export const RiskStatusPanel = () => {
           animate={{ y: 0, opacity: 1 }}
           className="mt-4 p-3 bg-red-900/30 border border-red-600 rounded-lg"
         >
-          <div className="text-xs font-bold text-red-300 mb-2">⚠️ WARNINGS</div>
+          <div className="text-xs font-bold text-red-300 mb-2 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4" />
+            WARNINGS
+          </div>
           <ul className="text-xs text-red-200 space-y-1">
             {collisionRisk > 80 && <li>• High collision risk detected</li>}
             {uncertainty > 0.7 && <li>• Uncertainty exceeds safety threshold</li>}

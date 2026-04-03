@@ -7,6 +7,7 @@ import { RightDecisionPanel } from './components/layout/RightDecisionPanel'
 import { CenterVisualization } from './components/mission/CenterVisualization'
 import { CLUSTERS, MOCK_DEBRIS_DATA, CAPTURE_METHODS, MISSION_STEPS } from './data/mockData'
 import { rankTargets, calculateCollisionRisk, selectOptimalCaptureMethod, generateRandomEvent } from './utils/missionLogic'
+import { AlertTriangle, MapPin } from 'lucide-react'
 import { executePlanningPhase, executeSimulationStep, getMissionStatus, processReplanningEvent } from './engines/simulationIntegrator'
 import Home from './pages/Home'
 import DemoDashboard from './pages/DemoDashboard'
@@ -96,7 +97,7 @@ export default function App() {
         const missionStatus = getMissionStatus(currentState)
         if (missionStatus.recommendations.length > 0) {
           const rec = missionStatus.recommendations[0]
-          addEventLog(`⚠️ ${rec.action}: ${rec.benefit}`)
+          addEventLog(`[WARNING] ${rec.action}: ${rec.benefit}`)
         }
 
         // Update uncertainty and collision risk
@@ -117,7 +118,7 @@ export default function App() {
         // Advance step
         setCurrentStep(currentStep + 1)
         const stepName = MISSION_STEPS[currentStep + 1]?.name || 'Unknown'
-        addEventLog(`📍 Advanced to step: ${stepName}`)
+        addEventLog(`[NAVIGATION] Advanced to step: ${stepName}`)
       } else {
         // Mission complete
         setMissionStatus('completed')

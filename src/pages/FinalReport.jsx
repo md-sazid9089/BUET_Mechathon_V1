@@ -156,11 +156,17 @@ export default function FinalReport() {
           className="grid md:grid-cols-5 gap-4 mb-12"
         >
           <div className="panel text-center">
-            <p className="text-gray-400 text-sm mb-2">🎯 Debris Captured</p>
+            <div className="text-gray-400 text-sm mb-2 flex items-center justify-center gap-2">
+              <Target className="w-4 h-4" />
+              Debris Captured
+            </div>
             <div className="text-4xl font-bold text-debris-success">{debrisRemoved}</div>
           </div>
           <div className="panel text-center">
-            <p className="text-gray-400 text-sm mb-2">⛽ Fuel Remaining</p>
+            <div className="text-gray-400 text-sm mb-2 flex items-center justify-center gap-2">
+              <Fuel className="w-4 h-4" />
+              Fuel Remaining
+            </div>
             <motion.div
               animate={{ color: fuel < 20 ? '#ef4444' : fuel < 40 ? '#f97316' : '#10b981' }}
               className="text-4xl font-bold"
@@ -169,15 +175,24 @@ export default function FinalReport() {
             </motion.div>
           </div>
           <div className="panel text-center">
-            <p className="text-gray-400 text-sm mb-2">⚡ Energy Level</p>
+            <div className="text-gray-400 text-sm mb-2 flex items-center justify-center gap-2">
+              <Zap className="w-4 h-4" />
+              Energy Level
+            </div>
             <div className="text-4xl font-bold text-debris-warning">{energy.toFixed(0)}%</div>
           </div>
           <div className="panel text-center">
-            <p className="text-gray-400 text-sm mb-2">💪 System Health</p>
+            <div className="text-gray-400 text-sm mb-2 flex items-center justify-center gap-2">
+              <Zap className="w-4 h-4" />
+              System Health
+            </div>
             <div className="text-4xl font-bold text-debris-success">{health.toFixed(0)}%</div>
           </div>
           <div className="panel text-center">
-            <p className="text-gray-400 text-sm mb-2">📊 Mission Step</p>
+            <div className="text-gray-400 text-sm mb-2 flex items-center justify-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Mission Step
+            </div>
             <div className="text-4xl font-bold text-debris-info">{currentStep}/10</div>
           </div>
         </motion.div>
@@ -191,7 +206,7 @@ export default function FinalReport() {
             className="panel mb-12"
           >
             <div className="flex items-center gap-3 mb-6">
-              <TrendingUp className="w-6 h-6 text-debris-info" />
+              <ChartTrendingUp className="w-6 h-6 text-debris-info" />
               <h2 className="text-2xl font-bold">System Performance Comparison</h2>
             </div>
             

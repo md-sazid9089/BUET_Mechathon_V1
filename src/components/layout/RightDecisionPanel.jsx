@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { AlertTriangle, Lightbulb, TrendingDown, ChevronDown } from 'lucide-react'
+import { AlertTriangle, Lightbulb, TrendingDown, ChevronDown, Brain, ClipboardList, XCircle, CheckCircle, Info, ShieldAlert, Circle } from 'lucide-react'
 import { useMissionStore } from '../../store/missionStore'
 import { predictNextThreats, getRecommendation } from '../../utils/missionLogic'
 
@@ -17,7 +17,16 @@ export const RightDecisionPanel = () => {
     setExpandedSection(expandedSection === section ? null : section)
   }
 
-  const Section = ({ id, title, icon, children, badge }) => (
+  const iconMap = {
+    '🤖': Brain,
+    '💡': Lightbulb,
+    '📋': ClipboardList,
+    '🚨': ShieldAlert,
+  }
+
+  const Section = ({ id, title, icon, children, badge }) => {
+    const IconComponent = iconMap[icon] || AlertTriangle
+    return (
     <motion.div className="mb-4">
       <motion.button
         onClick={() => toggleSection(id)}
@@ -25,7 +34,7 @@ export const RightDecisionPanel = () => {
         className="w-full flex items-center justify-between p-3 bg-space-700 hover:bg-space-600 rounded-lg border border-space-600 transition"
       >
         <div className="flex items-center gap-2 flex-1">
-          <span className="text-lg">{icon}</span>
+          <IconComponent className="w-5 h-5 text-debris-info" />
           <span className="font-mono font-bold text-sm">{title}</span>
           {badge && (
             <motion.span
@@ -59,6 +68,7 @@ export const RightDecisionPanel = () => {
       </motion.div>
     </motion.div>
   )
+  }
 
   // Get recent threats
   const threats = predictNextThreats()
@@ -71,7 +81,7 @@ export const RightDecisionPanel = () => {
       className="w-80 bg-space-800 border-l border-space-700 p-4 overflow-y-auto max-h-screen flex flex-col sticky top-16"
     >
       {/* AI Insights */}
-      <Section id="insights" title="AI INSIGHTS" icon="🤖" badge={threats.length > 0 ? '⚠️' : null}>
+      <Section id="insights" title="AI INSIGHTS" icon="🤖" badge={threats.length > 0 ? 'ALERT' : null}>
         <div className="space-y-3 text-xs">
           {threats.length > 0 ? (
             threats.slice(0, 3).map((threat, idx) => (
@@ -92,8 +102,9 @@ export const RightDecisionPanel = () => {
               </motion.div>
             ))
           ) : (
-            <div className="p-2 bg-green-900 border border-green-700 rounded-lg text-center">
-              ✓ All systems nominal
+            <div className="p-2 bg-green-900 border border-green-700 rounded-lg text-center flex items-center justify-center gap-2">
+              <CheckCircle className="w-4 h-4" />
+              All systems nominal
             </div>
           )}
         </div>
@@ -152,7 +163,7 @@ export const RightDecisionPanel = () => {
           id="alerts" 
           title="CRITICAL ALERTS" 
           icon="🚨" 
-          badge={collisionRisk > 70 ? '🔴' : '🟠'}
+          badge={collisionRisk > 70 ? 'CRITICAL' : 'WARNING'}
         >
           <div className="space-y-2 text-xs">
             {collisionRisk > 70 && (
@@ -161,7 +172,7 @@ export const RightDecisionPanel = () => {
                 transition={{ duration: 1.5, repeat: Infinity }}
                 className="p-2 bg-red-950 border border-red-700 rounded-lg"
               >
-                <span className="font-mono font-bold text-red-400">⚠️ HIGH COLLISION RISK</span>
+                <div className="flex items-center gap-2 font-mono font-bold text-red-400"><AlertTriangle className="w-4 h-4" /> HIGH COLLISION RISK</div>
                 <div className="text-gray-300 mt-1">Current: {collisionRisk}%</div>
               </motion.div>
             )}
@@ -171,7 +182,7 @@ export const RightDecisionPanel = () => {
                 transition={{ duration: 1.5, repeat: Infinity }}
                 className="p-2 bg-orange-950 border border-orange-700 rounded-lg"
               >
-                <span className="font-mono font-bold text-orange-400">⚠️ HIGH UNCERTAINTY</span>
+                <div className="flex items-center gap-2 font-mono font-bold text-orange-400"><AlertTriangle className="w-4 h-4" /> HIGH UNCERTAINTY</div>
                 <div className="text-gray-300 mt-1">Current: {uncertainty}%</div>
               </motion.div>
             )}
@@ -190,11 +201,11 @@ export const RightDecisionPanel = () => {
                 event.type === 'warning' ? 'bg-orange-900 text-orange-200' :
                 'bg-blue-900 text-blue-200'
               
-              const icon = 
-                event.type === 'error' ? '❌' :
-                event.type === 'success' ? '✓' :
-                event.type === 'warning' ? '⚠️' :
-                'ℹ️'
+              const IconComponent = 
+                event.type === 'error' ? XCircle :
+                event.type === 'success' ? CheckCircle :
+                event.type === 'warning' ? AlertTriangle :
+                Info
 
               return (
                 <motion.div
@@ -204,7 +215,7 @@ export const RightDecisionPanel = () => {
                   className={`p-2 rounded-lg border ${colorClass} border-opacity-40`}
                 >
                   <div className="flex gap-2">
-                    <span className="flex-shrink-0">{icon}</span>
+                    <IconComponent className="w-4 h-4 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <div className="font-mono font-bold">{event.message}</div>
                       <div className="text-xs opacity-75">
@@ -233,14 +244,17 @@ export const RightDecisionPanel = () => {
           className="p-3 rounded-lg border border-space-600 text-center"
         >
           <div className="font-mono font-bold text-xs text-gray-400 mb-2">MISSION STATUS</div>
-          <div className={`text-sm font-bold ${
+          <div className={`text-sm font-bold flex items-center gap-2 ${
             missionStatus === 'running' ? 'text-debris-success' :
             missionStatus === 'paused' ? 'text-debris-warning' :
             'text-gray-400'
           }`}>
-            {missionStatus === 'running' ? '🟢 ACTIVE' :
-             missionStatus === 'paused' ? '🟡 PAUSED' :
-             '⚫ IDLE'}
+            {missionStatus === 'running' ? <CheckCircle className="w-4 h-4" /> :
+             missionStatus === 'paused' ? <AlertTriangle className="w-4 h-4" /> :
+             <Circle className="w-4 h-4" />}
+            {missionStatus === 'running' ? 'ACTIVE' :
+             missionStatus === 'paused' ? 'PAUSED' :
+             'IDLE'}
           </div>
         </motion.div>
       </div>

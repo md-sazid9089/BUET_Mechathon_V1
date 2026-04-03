@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Pause, RotateCcw, Zap, ChevronDown } from 'lucide-react'
+import { Play, Pause, RotateCcw, ChevronDown, BarChart3, Search, Target, Zap, Radar, RefreshCcw, Settings, Joystick } from 'lucide-react'
 import { useMissionStore } from '../../store/missionStore'
 import { rankTargets, getStatusBadgeColor } from '../../utils/missionLogic'
 import { MOCK_DEBRIS_DATA, CAPTURE_METHODS } from '../../data/mockData'
@@ -30,7 +30,17 @@ export const LeftControlPanel = ({ onRun, onPause, onReset, onSelectCluster, clu
     setExpandedSection(expandedSection === section ? null : section)
   }
 
-  const Section = ({ id, title, icon, children }) => (
+  const iconMap = {
+    '📊': BarChart3,
+    '🔍': Search,
+    '🎯': Target,
+    '⚡': Zap,
+    '🎮': Joystick,
+  }
+
+  const Section = ({ id, title, icon, children }) => {
+    const IconComponent = iconMap[icon] || ChevronDown
+    return (
     <motion.div className="mb-4">
       <motion.button
         onClick={() => toggleSection(id)}
@@ -38,7 +48,7 @@ export const LeftControlPanel = ({ onRun, onPause, onReset, onSelectCluster, clu
         className="w-full flex items-center justify-between p-3 bg-space-700 hover:bg-space-600 rounded-lg border border-space-600 transition"
       >
         <div className="flex items-center gap-2">
-          <span className="text-lg">{icon}</span>
+          <IconComponent className="w-5 h-5 text-debris-info" />
           <span className="font-mono font-bold text-sm">{title}</span>
         </div>
         <motion.div
@@ -62,8 +72,7 @@ export const LeftControlPanel = ({ onRun, onPause, onReset, onSelectCluster, clu
         </div>
       </motion.div>
     </motion.div>
-  )
-
+  )  }
   const MetricBar = ({ label, value, color }) => (
     <div className="mb-3">
       <div className="flex justify-between items-center mb-1">
@@ -185,19 +194,19 @@ export const LeftControlPanel = ({ onRun, onPause, onReset, onSelectCluster, clu
             whileHover={{ scale: 1.02 }}
             className="w-full p-2 bg-space-700 hover:bg-space-600 rounded border border-space-600 font-mono font-bold transition"
           >
-            📡 Calibrate Sensors
+          <Radar className="w-4 h-4" /> Calibrate Sensors
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.02 }}
             className="w-full p-2 bg-space-700 hover:bg-space-600 rounded border border-space-600 font-mono font-bold transition"
           >
-            🔄 Recalculate Route
+          <RefreshCcw className="w-4 h-4" /> Recalculate Route
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.02 }}
             className="w-full p-2 bg-space-700 hover:bg-space-600 rounded border border-space-600 font-mono font-bold transition"
           >
-            ⚙️ Systems Check
+          <Settings className="w-4 h-4" /> Systems Check
           </motion.button>
         </div>
       </Section>

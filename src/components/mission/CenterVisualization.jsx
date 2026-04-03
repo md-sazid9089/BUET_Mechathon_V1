@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
+import { Satellite, Map, Settings, BarChart3, Zap } from 'lucide-react'
 import { useMissionStore } from '../../store/missionStore'
 import { OrbitMap } from './OrbitMap'
 import { MissionTimelineStepper } from './MissionTimelineStepper'
@@ -19,11 +20,11 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
   const [activeTab, setActiveTab] = useState('orbit')
 
   const tabs = [
-    { id: 'orbit', label: 'Orbit View', icon: '🛰️' },
-    { id: 'planning', label: 'Planning', icon: '🗺️' },
-    { id: 'execution', label: 'Execution', icon: '⚙️' },
-    { id: 'metrics', label: 'Metrics', icon: '📊' },
-    { id: 'safety', label: 'Safety', icon: '⚡' },
+    { id: 'orbit', label: 'Orbit View', Icon: Satellite },
+    { id: 'planning', label: 'Planning', Icon: Map },
+    { id: 'execution', label: 'Execution', Icon: Settings },
+    { id: 'metrics', label: 'Metrics', Icon: BarChart3 },
+    { id: 'safety', label: 'Safety', Icon: Zap },
   ]
 
   return (
@@ -40,13 +41,14 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
             onClick={() => setActiveTab(tab.id)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`px-4 py-2 rounded-lg font-mono text-sm font-bold whitespace-nowrap transition border ${
+            className={`px-4 py-2 rounded-lg font-mono text-sm font-bold whitespace-nowrap transition border flex items-center gap-2 ${
               activeTab === tab.id
                 ? 'bg-debris-info border-debris-info text-space-900'
                 : 'bg-space-700 border-space-600 text-white hover:border-space-500'
             }`}
           >
-            {tab.icon} {tab.label}
+            <tab.Icon className="w-4 h-4" />
+            {tab.label}
           </motion.button>
         ))}
       </div>
