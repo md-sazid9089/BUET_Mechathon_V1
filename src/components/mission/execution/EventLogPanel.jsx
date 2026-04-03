@@ -9,13 +9,13 @@ export const EventLogPanel = () => {
   const getEventStyle = (type) => {
     switch (type) {
       case 'error':
-        return 'bg-red-900/20 border-l-2 border-red-600 text-red-300'
+        return 'bg-status-danger bg-opacity-15 border-l-4 border-status-danger text-status-danger hover:bg-opacity-25'
       case 'success':
-        return 'bg-green-900/20 border-l-2 border-green-600 text-green-300'
+        return 'bg-status-success bg-opacity-15 border-l-4 border-status-success text-status-success hover:bg-opacity-25'
       case 'warning':
-        return 'bg-yellow-900/20 border-l-2 border-yellow-600 text-yellow-300'
+        return 'bg-status-warning bg-opacity-15 border-l-4 border-status-warning text-status-warning hover:bg-opacity-25'
       default:
-        return 'bg-blue-900/20 border-l-2 border-blue-600 text-blue-300'
+        return 'bg-neon-blue bg-opacity-15 border-l-4 border-neon-blue text-neon-blue hover:bg-opacity-25'
     }
   }
 
@@ -38,14 +38,16 @@ export const EventLogPanel = () => {
       animate={{ opacity: 1, y: 0 }}
       className="panel"
     >
-      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <AlertTriangle className="w-5 h-5 text-debris-info" />
-        Mission Events
+      <h3 className="text-lg font-semibold mb-4 flex items-center gap-3">
+        <AlertTriangle className="w-5 h-5 text-neon-blue" />
+        <span className="bg-gradient-to-r from-neon-blue to-neon-cyan bg-clip-text text-transparent uppercase tracking-wide">Mission Events</span>
       </h3>
 
-      <div className="space-y-2 max-h-64 overflow-y-auto">
+      <div className="space-y-2.5 max-h-64 overflow-y-auto">
         {eventLog.length === 0 ? (
-          <div className="text-sm text-gray-400 p-4 text-center">No events yet</div>
+          <div className="text-sm text-gray-500 p-6 text-center font-mono italic">
+            No events recorded yet
+          </div>
         ) : (
           eventLog.map((event, idx) => {
             const IconComponent = getEventIcon(event.type)
@@ -55,13 +57,15 @@ export const EventLogPanel = () => {
               initial={{ x: 100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: idx * 0.05 }}
-              className={`p-3 rounded-lg ${getEventStyle(event.type)}`}
+              className={`p-3 rounded-lg transition-all duration-200 ${getEventStyle(event.type)}`}
             >
-              <div className="flex items-start gap-2">
-                <IconComponent className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3">
+                <IconComponent className="w-5 h-5 flex-shrink-0 mt-0.5 opacity-80" />
                 <div className="flex-1 min-w-0">
-                  <div className="font-mono text-xs font-bold mb-1">{event.timestamp}</div>
-                  <div className="text-sm break-words">{event.message}</div>
+                  <div className="font-mono text-xs font-bold opacity-75 mb-1.5">
+                    {new Date(event.timestamp).toLocaleTimeString()}
+                  </div>
+                  <div className="text-sm break-words font-medium">{event.message}</div>
                 </div>
               </div>
             </motion.div>
@@ -73,7 +77,7 @@ export const EventLogPanel = () => {
       {eventLog.length > 0 && (
         <motion.button
           whileHover={{ scale: 1.02 }}
-          className="w-full mt-4 px-3 py-2 bg-space-700 hover:bg-space-600 rounded-lg text-xs font-mono border border-space-600 transition"
+          className="w-full mt-4 px-4 py-2 bg-astronaut-700 hover:bg-astronaut-600 hover:border-neon-blue rounded-lg text-xs font-mono font-bold border border-astronaut-600 transition-all duration-200 text-gray-300 uppercase tracking-wide"
         >
           Clear Log
         </motion.button>
