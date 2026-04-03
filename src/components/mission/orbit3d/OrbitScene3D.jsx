@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react'
+import React, { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Stars, PerspectiveCamera } from '@react-three/drei'
 import { useMissionStore } from '../../../store/missionStore'
@@ -39,26 +39,23 @@ const calculateOrbitalPosition = (debrisId, time) => {
 // Scene content component
 const SceneContent = ({ selectedCluster, debrisRemoved }) => {
   const groupRef = useRef(null)
-  const [time, setTime] = useState(0)
+  const timeRef = useRef(0)
+  const debrisPositionsRef = useRef({})
   const currentTarget = useMissionStore((state) => state.currentTarget)
   const route = useMissionStore((state) => state.route)
   const missionStatus = useMissionStore((state) => state.missionStatus)
 
   useFrame(() => {
-    setTime((prevTime) => prevTime + 1)
+    timeRef.current += 1
+    
+    // Update debris positions every frame (using ref, not state)
+    MOCK_DEBRIS_DATA.forEach((debris) => {
+      debrisPositionsRef.current[debris.id] = calculateOrbitalPosition(debris.id, timeRef.current)
+    })
   })
 
-  // Calculate debris positions
-  const debrisPositions = useMemo(
-    () => {
-      const positions = {}
-      MOCK_DEBRIS_DATA.forEach((debris) => {
-        positions[debris.id] = calculateOrbitalPosition(debris.id, time)
-      })
-      return positions
-    },
-    [time]
-  )
+  // Get current positions from ref
+  const debrisPositions = debrisPositionsRef.current
 
   // Calculate route positions
   const routePositions = useMemo(() => {
@@ -71,7 +68,7 @@ const SceneContent = ({ selectedCluster, debrisRemoved }) => {
   const nextTargetIdx = route ? route.findIndex((t) => t.id === currentTarget?.id) : -1
   const nextTarget = nextTargetIdx >= 0 && nextTargetIdx < route.length - 1 ? route[nextTargetIdx + 1] : null
   const nextTargetPos = nextTarget ? debrisPositions[nextTarget.id] : spacecraftPos
-  const progress = missionStatus === 'running' ? (time % 100) / 100 : 0
+  const progress = missionStatus === 'running' ? (timeRef.current % 100) / 100 : 0
 
   // Filter debris to show
   const visibleDebris = selectedCluster
