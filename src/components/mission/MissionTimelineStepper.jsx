@@ -38,11 +38,13 @@ export const MissionTimelineStepper = () => {
       animate={{ y: 0, opacity: 1 }}
       className="w-full"
     >
-      <div className="bg-space-800 border border-space-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-6">Mission Timeline</h3>
+      <div className="bg-astronaut-800 border border-astronaut-600 rounded-2xl p-6 shadow-card-lg">
+        <h3 className="text-lg font-semibold mb-6 flex items-center gap-3">
+          <span className="bg-gradient-to-r from-neon-blue to-neon-cyan bg-clip-text text-transparent uppercase tracking-wide">Mission Timeline</span>
+        </h3>
 
         {/* Horizontal Timeline - Desktop */}
-        <div className="hidden md:flex overflow-x-auto gap-2 pb-4">
+        <div className="hidden md:flex overflow-x-auto gap-2 pb-4 scrollbar-thin">
           {steps.map((step, idx) => (
             <motion.div
               key={step.step}
@@ -51,38 +53,54 @@ export const MissionTimelineStepper = () => {
               transition={{ delay: idx * 0.05 }}
               className="flex flex-col items-center gap-2 flex-shrink-0"
             >
-              {/* Step Circle */}
+              {/* Step Circle with Glow */}
               <motion.div
                 animate={{
                   backgroundColor:
                     currentStep === step.step
-                      ? '#3b82f6'
+                      ? '#3B82F6'
                       : currentStep > step.step
-                        ? '#10b981'
+                        ? '#22C55E'
                         : '#374151',
-                  scale: currentStep === step.step ? 1.1 : 1,
+                  boxShadow:
+                    currentStep === step.step
+                      ? '0 0 20px rgba(59, 130, 246, 0.5)'
+                      : currentStep > step.step
+                        ? '0 0 15px rgba(34, 197, 94, 0.4)'
+                        : 'none',
+                  scale: currentStep === step.step ? 1.15 : 1,
                 }}
-                className="w-12 h-12 rounded-full flex items-center justify-center font-bold cursor-pointer border-2 border-space-600 hover:border-debris-info transition"
+                className="w-14 h-14 rounded-full flex items-center justify-center font-bold cursor-pointer border-2 transition-all duration-300"
+                style={{
+                  borderColor: currentStep === step.step ? '#3B82F6' : currentStep > step.step ? '#22C55E' : '#2A3558'
+                }}
               >
                 {currentStep > step.step ? (
-                  <Check className="w-6 h-6 text-green-300" />
+                  <Check className="w-6 h-6 text-white" />
                 ) : (
-                  <span className="text-sm">{step.step + 1}</span>
+                  <span className="text-sm font-mono">{step.step + 1}</span>
                 )}
               </motion.div>
 
               {/* Icon & Label */}
-              {React.createElement(IconMap[step.icon], { className: 'w-5 h-5 text-debris-info' })}
-              <div className="text-xs font-mono font-bold text-center">{step.label}</div>
-              <div className="text-xs text-gray-400 text-center max-w-[60px]">{step.desc}</div>
+              <motion.div
+                animate={{
+                  color: currentStep >= step.step ? '#3B82F6' : '#6B7280',
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                {React.createElement(IconMap[step.icon], { className: 'w-5 h-5' })}
+              </motion.div>
+              <div className="text-xs font-mono font-bold text-center text-gray-300">{step.label}</div>
+              <div className="text-xs text-gray-500 text-center max-w-[70px] leading-tight">{step.desc}</div>
 
               {/* Connector */}
               {idx < steps.length - 1 && (
                 <motion.div
                   animate={{
-                    backgroundColor: currentStep > step.step ? '#10b981' : '#374151',
+                    backgroundColor: currentStep > step.step ? '#22C55E' : '#475569',
                   }}
-                  className="w-8 h-1 hidden md:block mt-2"
+                  className="w-10 h-1 hidden md:block mt-2 rounded-full transition-colors duration-300"
                 />
               )}
             </motion.div>
@@ -97,50 +115,63 @@ export const MissionTimelineStepper = () => {
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: idx * 0.05 }}
-              className="flex items-center gap-4"
+              className="flex items-center gap-4 p-3 bg-astronaut-700 rounded-lg border border-astronaut-600 hover:border-neon-blue transition-all duration-200"
             >
               {/* Step Indicator */}
               <motion.div
                 animate={{
                   backgroundColor:
                     currentStep === step.step
-                      ? '#3b82f6'
+                      ? '#3B82F6'
                       : currentStep > step.step
-                        ? '#10b981'
+                        ? '#22C55E'
                         : '#374151',
+                  boxShadow:
+                    currentStep === step.step
+                      ? '0 0 15px rgba(59, 130, 246, 0.4)'
+                      : 'none',
                 }}
-                className="w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 border-2 border-space-600"
+                className="w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 border-2 transition-all duration-300"
+                style={{
+                  borderColor: currentStep === step.step ? '#3B82F6' : currentStep > step.step ? '#22C55E' : '#2A3558'
+                }}
               >
                 {currentStep > step.step ? (
-                  <Check className="w-5 h-5" />
+                  <Check className="w-5 h-5 text-white" />
                 ) : (
-                  <span className="text-xs">{step.step + 1}</span>
+                  <span className="text-xs font-mono">{step.step + 1}</span>
                 )}
               </motion.div>
 
               {/* Step Info */}
               <div className="flex-1">
-                <div className="font-mono font-bold text-sm">{step.label}</div>
-                <div className="text-xs text-gray-400">{step.desc}</div>
+                <div className="font-mono font-bold text-sm text-gray-300">{step.label}</div>
+                <div className="text-xs text-gray-500">{step.desc}</div>
               </div>
 
               {/* Icon */}
-              <span className="text-lg">{step.icon}</span>
+              <motion.div
+                animate={{
+                  color: currentStep >= step.step ? '#3B82F6' : '#6B7280',
+                }}
+              >
+                {React.createElement(IconMap[step.icon], { className: 'w-5 h-5' })}
+              </motion.div>
             </motion.div>
           ))}
         </div>
 
         {/* Current Step Progress */}
-        <div className="mt-6 p-4 bg-space-700 rounded-lg border border-space-600">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-mono">Progress</span>
-            <span className="text-sm font-bold text-debris-info">{((currentStep / 9) * 100).toFixed(0)}%</span>
+        <div className="mt-8 p-4 bg-astronaut-700 rounded-lg border border-astronaut-600 hover:border-neon-blue transition-all duration-200">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-mono uppercase tracking-wide text-gray-400">Overall Progress</span>
+            <span className="text-sm font-bold text-neon-blue font-mono">{((currentStep / 9) * 100).toFixed(0)}%</span>
           </div>
-          <div className="w-full bg-space-600 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-astronaut-600 rounded-full h-2.5 overflow-hidden border border-astronaut-500">
             <motion.div
               animate={{ width: `${((currentStep + 1) / 10) * 100}%` }}
               transition={{ duration: 0.5 }}
-              className="bg-gradient-to-r from-debris-info to-debris-success h-full"
+              className="h-full rounded-full bg-gradient-to-r from-neon-blue via-neon-cyan to-neon-purple"
             />
           </div>
         </div>

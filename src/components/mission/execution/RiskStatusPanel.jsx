@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, AlertCircle } from 'lucide-react'
 import { useMissionStore } from '../../../store/missionStore'
 
 export const RiskStatusPanel = () => {
@@ -9,10 +9,10 @@ export const RiskStatusPanel = () => {
   const health = useMissionStore((state) => state.health)
 
   const getRiskLevel = (risk) => {
-    if (risk >= 80) return { level: 'CRITICAL', color: 'text-red-500', bg: 'bg-red-900/20' }
-    if (risk >= 60) return { level: 'HIGH', color: 'text-orange-500', bg: 'bg-orange-900/20' }
-    if (risk >= 40) return { level: 'MEDIUM', color: 'text-yellow-500', bg: 'bg-yellow-900/20' }
-    return { level: 'LOW', color: 'text-green-500', bg: 'bg-green-900/20' }
+    if (risk >= 80) return { level: 'CRITICAL', color: 'text-status-danger', bg: 'bg-status-danger bg-opacity-15', border: 'border-status-danger', icon: AlertCircle }
+    if (risk >= 60) return { level: 'HIGH', color: 'text-status-warning', bg: 'bg-status-warning bg-opacity-15', border: 'border-status-warning', icon: AlertTriangle }
+    if (risk >= 40) return { level: 'MEDIUM', color: 'text-neon-purple', bg: 'bg-neon-purple bg-opacity-15', border: 'border-neon-purple', icon: AlertTriangle }
+    return { level: 'LOW', color: 'text-status-success', bg: 'bg-status-success bg-opacity-15', border: 'border-status-success', icon: AlertTriangle }
   }
 
   const collisionLevel = getRiskLevel(collisionRisk)
@@ -22,66 +22,79 @@ export const RiskStatusPanel = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="panel border-l-4 border-debris-danger"
+      className="panel border-l-4 border-status-danger shadow-glow-red hover:shadow-glow-red transition-all duration-200"
     >
-      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <AlertTriangle className="w-5 h-5 text-debris-danger" />
-        Risk Assessment
+      <h3 className="text-lg font-semibold mb-5 flex items-center gap-3">
+        <AlertTriangle className="w-6 h-6 text-status-danger" />
+        <span className="bg-gradient-to-r from-status-danger to-neon-pink bg-clip-text text-transparent uppercase tracking-wide">Risk Assessment</span>
       </h3>
 
       {/* Collision Risk */}
-      <div className={`${collisionLevel.bg} rounded-lg p-4 mb-4 border border-red-700`}>
+      <div className={`${collisionLevel.bg} rounded-lg p-4 mb-5 border-2 ${collisionLevel.border}`}>
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-mono font-bold">COLLISION RISK</div>
-          <div className={`text-2xl font-bold ${collisionLevel.color}`}>{collisionRisk}%</div>
+          <div className="text-sm font-mono font-bold uppercase tracking-wide text-gray-400">Collision Risk</div>
+          <div className={`text-2xl font-bold font-mono ${collisionLevel.color}`}>{collisionRisk}%</div>
         </div>
-        <div className="w-full bg-red-900/30 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-astronaut-600 rounded-full h-2.5 overflow-hidden border border-astronaut-500">
           <motion.div
             animate={{ width: `${collisionRisk}%` }}
             transition={{ duration: 0.5 }}
-            className="bg-red-500 h-full"
+            className={`h-full rounded-full ${
+              collisionRisk >= 80 ? 'bg-gradient-to-r from-status-danger to-red-500' :
+              collisionRisk >= 60 ? 'bg-gradient-to-r from-status-warning to-amber-500' :
+              collisionRisk >= 40 ? 'bg-gradient-to-r from-neon-purple to-pink-500' :
+              'bg-gradient-to-r from-status-success to-emerald-500'
+            }`}
           />
         </div>
-        <div className={`text-xs mt-2 font-mono ${collisionLevel.color}`}>
+        <div className={`text-xs mt-2.5 font-mono font-bold uppercase tracking-wide ${collisionLevel.color}`}>
           Status: {collisionLevel.level}
         </div>
       </div>
 
       {/* Uncertainty */}
-      <div className={`${uncertaintyLevel.bg} rounded-lg p-4 mb-4 border border-yellow-700`}>
+      <div className={`${uncertaintyLevel.bg} rounded-lg p-4 mb-5 border-2 ${uncertaintyLevel.border}`}>
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-mono font-bold">UNCERTAINTY</div>
-          <div className={`text-2xl font-bold ${uncertaintyLevel.color}`}>
+          <div className="text-sm font-mono font-bold uppercase tracking-wide text-gray-400">Uncertainty</div>
+          <div className={`text-2xl font-bold font-mono ${uncertaintyLevel.color}`}>
             {(uncertainty * 100).toFixed(0)}%
           </div>
         </div>
-        <div className="w-full bg-yellow-900/30 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-astronaut-600 rounded-full h-2.5 overflow-hidden border border-astronaut-500">
           <motion.div
             animate={{ width: `${uncertainty * 100}%` }}
             transition={{ duration: 0.5 }}
-            className="bg-yellow-500 h-full"
+            className={`h-full rounded-full ${
+              uncertainty > 0.7 ? 'bg-gradient-to-r from-status-warning to-amber-500' :
+              uncertainty > 0.4 ? 'bg-gradient-to-r from-neon-purple to-pink-500' :
+              'bg-gradient-to-r from-status-success to-emerald-500'
+            }`}
           />
         </div>
-        <div className="text-xs mt-2 text-gray-300">
-          {uncertainty > 0.7 ? 'High - Increase monitoring' :
-           uncertainty > 0.4 ? 'Moderate - Standard monitoring' :
-           'Low - Proceed with confidence'}
+        <div className="text-xs mt-2.5 text-gray-300 font-mono">
+          {uncertainty > 0.7 ? '🔴 High - Increase monitoring' :
+           uncertainty > 0.4 ? '🟡 Moderate - Standard monitoring' :
+           '🟢 Low - Proceed with confidence'}
         </div>
       </div>
 
       {/* System Health */}
-      <div className={`${health > 70 ? 'bg-green-900/20 border-green-700' : 'bg-orange-900/20 border-orange-700'} rounded-lg p-4 border`}>
+      <div className={`${health > 70 ? 'bg-status-success bg-opacity-15 border-status-success' : health > 40 ? 'bg-status-warning bg-opacity-15 border-status-warning' : 'bg-status-danger bg-opacity-15 border-status-danger'} rounded-lg p-4 mb-5 border-2`}>
         <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-mono font-bold">SYSTEM HEALTH</div>
-          <div className={`text-2xl font-bold ${health > 70 ? 'text-green-400' : 'text-orange-400'}`}>
+          <div className="text-sm font-mono font-bold uppercase tracking-wide text-gray-400">System Health</div>
+          <div className={`text-2xl font-bold font-mono ${health > 70 ? 'text-status-success' : health > 40 ? 'text-status-warning' : 'text-status-danger'}`}>
             {health}%
           </div>
         </div>
-        <div className="w-full bg-green-900/30 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-astronaut-600 rounded-full h-2.5 overflow-hidden border border-astronaut-500">
           <motion.div
             animate={{ width: `${health}%` }}
             transition={{ duration: 0.5 }}
-            className={`${health > 70 ? 'bg-green-500' : 'bg-orange-500'} h-full`}
+            className={`h-full rounded-full ${
+              health > 70 ? 'bg-gradient-to-r from-status-success to-emerald-500' :
+              health > 40 ? 'bg-gradient-to-r from-status-warning to-amber-500' :
+              'bg-gradient-to-r from-status-danger to-red-500'
+            }`}
           />
         </div>
       </div>
@@ -91,16 +104,16 @@ export const RiskStatusPanel = () => {
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mt-4 p-3 bg-red-900/30 border border-red-600 rounded-lg"
+          className="mt-0 p-4 bg-status-danger bg-opacity-20 border-2 border-status-danger rounded-lg shadow-glow-red"
         >
-          <div className="text-xs font-bold text-red-300 mb-2 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4" />
-            WARNINGS
+          <div className="text-xs font-bold text-status-danger mb-2.5 flex items-center gap-2 uppercase tracking-wide">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+            ⚠️ ACTIVE WARNINGS
           </div>
-          <ul className="text-xs text-red-200 space-y-1">
-            {collisionRisk > 80 && <li>• High collision risk detected</li>}
-            {uncertainty > 0.7 && <li>• Uncertainty exceeds safety threshold</li>}
-            {health < 40 && <li>• System health critical</li>}
+          <ul className="text-xs text-gray-200 space-y-1.5 font-mono">
+            {collisionRisk > 80 && <li>• 🔴 High collision risk detected - immediate action advised</li>}
+            {uncertainty > 0.7 && <li>• 🟡 Uncertainty exceeds safety threshold - validate targets</li>}
+            {health < 40 && <li>• 🔴 System health critical - maintenance recommended</li>}
           </ul>
         </motion.div>
       )}
