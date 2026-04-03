@@ -1,86 +1,17 @@
 import React, { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Stars, PerspectiveCamera } from '@react-three/drei'
+import { OrbitControls, Stars } from '@react-three/drei'
 import { useMissionStore } from '../../../store/missionStore'
-import { MOCK_DEBRIS_DATA, CLUSTERS } from '../../../data/mockData'
-import { EarthGlobe } from './EarthGlobe'
-import { OrbitRing } from './OrbitRing'
-import { DebrisObject } from './DebrisObject'
-import { SpacecraftMarker } from './SpacecraftMarker'
-import { RoutePath3D } from './RoutePath3D'
+import { MOCK_DEBRIS_DATA } from '../../../data/mockData'
 
-// Orbital positions calculator
-const calculateOrbitalPosition = (debrisId, time) => {
-  const debris = MOCK_DEBRIS_DATA.find((d) => d.id === debrisId)
-  if (!debris) return [0, 0, 0]
-
-  // Normalize altitude to orbit radius (800-900km altitude → 1.5-3.5 orbit radius)
-  const baseRadius = 1.5 + (debris.altitude - 800) / 1000
-  const orbitRadius = baseRadius
-
-  // Velocity determines angular speed
-  const angularSpeed = (debris.velocity / 50) * 0.005
-  const angle = (time * angularSpeed) % (Math.PI * 2)
-
-  // Add slight elliptical variation
-  const eccentricity = debris.tumbleRate * 0.1
-  const actualRadius = orbitRadius * (1 - eccentricity * Math.cos(angle))
-
-  // Position in orbit
-  const x = Math.cos(angle) * actualRadius
-  const z = Math.sin(angle) * actualRadius
-
-  // Slight vertical variation based on latitude
-  const y = Math.sin((debris.latitude / 90) * Math.PI) * 0.3
-
-  return [x, y, z]
-}
-
-// Scene content component
-const SceneContent = ({ selectedCluster, debrisRemoved }) => {
+// Simpler scene - just the basics
+const SimpleScene = ({ selectedCluster }) => {
   const groupRef = useRef(null)
   const timeRef = useRef(0)
-  const debrisPositionsRef = useRef({})
-  const currentTarget = useMissionStore((state) => state.currentTarget)
-  const route = useMissionStore((state) => state.route)
-  const missionStatus = useMissionStore((state) => state.missionStatus)
 
   useFrame(() => {
     timeRef.current += 1
-    
-    // Update debris positions every frame (using ref, not state)
-    MOCK_DEBRIS_DATA.forEach((debris) => {
-      debrisPositionsRef.current[debris.id] = calculateOrbitalPosition(debris.id, timeRef.current)
-    })
   })
-
-  // Get current positions from ref
-  const debrisPositions = debrisPositionsRef.current
-
-  // Calculate route positions
-  const routePositions = useMemo(() => {
-    if (!route || route.length < 2) return []
-    return route.map((target) => debrisPositions[target.id] || [0, 0, 0])
-  }, [route, debrisPositions])
-
-  // Get spacecraft position (between current and next target)
-  const spacecraftPos = currentTarget ? debrisPositions[currentTarget.id] : [0, 1.2, 0]
-  const nextTargetIdx = route ? route.findIndex((t) => t.id === currentTarget?.id) : -1
-  const nextTarget = nextTargetIdx >= 0 && nextTargetIdx < route.length - 1 ? route[nextTargetIdx + 1] : null
-  const nextTargetPos = nextTarget ? debrisPositions[nextTarget.id] : spacecraftPos
-  const progress = missionStatus === 'running' ? (timeRef.current % 100) / 100 : 0
-
-  // Filter debris to show
-  const visibleDebris = selectedCluster
-    ? MOCK_DEBRIS_DATA.filter((d) => d.cluster === selectedCluster.id && !debrisRemoved.includes(d.id))
-    : MOCK_DEBRIS_DATA.filter((d) => !debrisRemoved.includes(d.id))
-
-  // Orbital radii for rings
-  const orbitalRadii = [
-    { radius: 1.5, color: '#3B82F6', opacity: 0.2 },
-    { radius: 2.3, color: '#06B6D4', opacity: 0.15 },
-    { radius: 3.1, color: '#8B5CF6', opacity: 0.1 },
-  ]
 
   return (
     <group ref={groupRef}>
@@ -90,72 +21,43 @@ const SceneContent = ({ selectedCluster, debrisRemoved }) => {
       {/* Lighting */}
       <ambientLight intensity={0.6} color="#ffffff" />
       <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" />
-      <pointLight position={[-20, -10, -10]} intensity={0.2} color="#3B82F6" />
 
-      {/* Earth */}
-      <EarthGlobe />
+      {/* Simple Earth sphere */}
+      <mesh>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshPhongMaterial color="#1e40af" emissive="#1e40af" emissiveIntensity={0.3} />
+      </mesh>
 
-      {/* Orbital rings */}
-      {orbitalRadii.map((ring, idx) => (
-        <OrbitRing
-          key={`ring-${idx}`}
-          radius={ring.radius}
-          color={ring.color}
-          opacity={ring.opacity}
-          isSelected={selectedCluster && idx === 0}
-        />
-      ))}
+      {/* Orbit ring */}
+      <mesh rotation={[0.3, 0, 0]}>
+        <torusGeometry args={[2, 0.05, 8, 100]} />
+        <meshBasicMaterial color="#3B82F6" transparent opacity={0.5} />
+      </mesh>
 
-      {/* Debris objects */}
-      {visibleDebris.map((debris) => (
-        <DebrisObject
-          key={debris.id}
-          debris={debris}
-          position={debrisPositions[debris.id]}
-          isSelected={selectedCluster && selectedCluster.id === debris.cluster}
-          isTarget={currentTarget?.id === debris.id}
-          isRemoved={debrisRemoved.includes(debris.id)}
-        />
-      ))}
-
-      {/* Route path */}
-      {routePositions.length > 0 && (
-        <RoutePath3D
-          routePositions={routePositions}
-          completed={missionStatus === 'completed'}
-        />
-      )}
-
-      {/* Spacecraft marker */}
-      <SpacecraftMarker
-        position={spacecraftPos}
-        targetPosition={nextTargetPos}
-        progress={progress}
-      />
+      {/* Simple debris dots */}
+      {MOCK_DEBRIS_DATA.slice(0, 5).map((debris, idx) => {
+        const angle = (idx / 5) * Math.PI * 2
+        const radius = 2.5
+        return (
+          <mesh key={debris.id} position={[Math.cos(angle) * radius, 0, Math.sin(angle) * radius]}>
+            <sphereGeometry args={[0.1, 16, 16]} />
+            <meshPhongMaterial color="#06B6D4" emissive="#06B6D4" emissiveIntensity={0.6} />
+          </mesh>
+        )
+      })}
     </group>
   )
 }
 
 export const OrbitScene3D = ({ selectedCluster }) => {
-  const debrisRemoved = useMissionStore((state) => {
-    // Return IDs of debris that have been removed
-    return state.debrisRemoved ? [] : []
-  })
-
   return (
     <div className="w-full h-full bg-gradient-to-b from-astronaut-950 via-astronaut-900 to-astronaut-800 rounded-2xl overflow-hidden relative" style={{ minHeight: '600px' }}>
-      {/* Canvas */}
-      <Canvas
-        camera={{ position: [5, 3, 5], fov: 50 }}
-        style={{ width: '100%', height: '100%', display: 'block' }}
-        gl={{ antialias: true, alpha: true }}
-      >
-        <PerspectiveCamera makeDefault position={[5, 3, 5]} fov={50} />
-        <SceneContent selectedCluster={selectedCluster} debrisRemoved={debrisRemoved} />
-        <OrbitControls
+      {/* Canvas with minimal setup */}
+      <Canvas camera={{ position: [5, 3, 5], fov: 50 }}>
+        <color attach="background" args={['#020617']} />
+        <SimpleScene selectedCluster={selectedCluster} />
+        <OrbitControls 
           enablePan={false}
-          enableDamping
-          dampingFactor={0.05}
           autoRotate
           autoRotateSpeed={0.5}
         />
@@ -170,7 +72,7 @@ export const OrbitScene3D = ({ selectedCluster }) => {
               3D Orbital View
             </div>
             <div className="text-sm text-neon-blue font-mono mt-1">
-              {selectedCluster ? selectedCluster.name : 'All Debris'}
+              Mission Control
             </div>
           </div>
 
