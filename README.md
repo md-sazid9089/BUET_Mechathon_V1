@@ -66,6 +66,9 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Preview production build locally
+npm run preview
 ```
 
 ### Running the Application
@@ -75,6 +78,68 @@ npm run build
 3. Select a debris cluster from the sidebar
 4. Use the control buttons to Run/Pause/Reset the mission
 5. Monitor the AI insights and mission status on the right panel
+
+## 🌐 Deployment to Vercel
+
+This project is ready for deployment on Vercel. Follow these steps:
+
+### Prerequisites
+- GitHub account with repository
+- Vercel account (https://vercel.com)
+
+### Deployment Steps
+
+1. **Prepare for deployment**:
+   ```bash
+   # Ensure everything builds correctly
+   npm run build
+   
+   # Verify no errors in production build
+   npm run preview
+   ```
+
+2. **Push to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Prepare for production deployment"
+   git push origin main
+   ```
+
+3. **Deploy to Vercel**:
+   - Go to https://vercel.com/new
+   - Select "Import Git Repository"
+   - Choose your repository
+   - Vercel will auto-detect Vite settings
+   - Click "Deploy"
+
+### Build Configuration
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
+- **Install Command**: `npm install`
+
+### Environment Setup
+- No environment variables required
+- Application uses fully mocked data
+- Production-ready with no external dependencies
+
+### Vercel Configuration
+The `vercel.json` file includes:
+- SPA rewrite rules for React Router
+- All routes redirect to `index.html` for client-side routing
+
+### Deployment Verification
+After deployment, verify:
+1. **Home page** loads at `/`
+2. **Demo page** loads at `/demo`
+3. **Report page** loads at `/report`
+4. **Route refresh** works without 404 errors (SPA routing)
+5. **All features** work in production build
+
+### Custom Domain (Optional)
+In Vercel dashboard:
+1. Go to Settings → Domains
+2. Add your custom domain
+3. Configure DNS records as instructed
 
 ## 📊 Global State (Zustand)
 

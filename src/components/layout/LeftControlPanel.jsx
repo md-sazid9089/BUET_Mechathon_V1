@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Pause, RotateCcw, Zap, ChevronDown } from 'lucide-react'
+import { Play, Pause, RotateCcw, ChevronDown, BarChart3, Search, Target, Zap, Radar, RefreshCcw, Settings, Joystick } from 'lucide-react'
 import { useMissionStore } from '../../store/missionStore'
 import { rankTargets, getStatusBadgeColor } from '../../utils/missionLogic'
 import { MOCK_DEBRIS_DATA, CAPTURE_METHODS } from '../../data/mockData'
@@ -35,6 +35,7 @@ export const LeftControlPanel = ({ onRun, onPause, onReset, onSelectCluster, clu
     '🔍': Search,
     '🎯': Target,
     '⚡': Zap,
+    '🎮': Joystick,
   }
 
   const Section = ({ id, title, icon, children }) => {

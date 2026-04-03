@@ -68,6 +68,7 @@ export const RightDecisionPanel = () => {
       </motion.div>
     </motion.div>
   )
+  }
 
   // Get recent threats
   const threats = predictNextThreats()
