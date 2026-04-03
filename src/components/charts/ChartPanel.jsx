@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
+import { Zap, BarChart3, TrendingUp } from 'lucide-react'
 import {
   LineChart,
   Line,
@@ -51,7 +52,7 @@ export const ChartPanel = () => {
   const [activeChart, setActiveChart] = useState('fuel')
 
   const charts = [
-    { id: 'fuel', label: 'Fuel Usage', Icon: Fuel },
+    { id: 'fuel', label: 'Fuel Usage', Icon: Zap },
     { id: 'risk', label: 'Risk Trend', Icon: BarChart3 },
     { id: 'uncertainty', label: 'Uncertainty', Icon: TrendingUp },
   ]
@@ -63,17 +64,17 @@ export const ChartPanel = () => {
       className="w-full space-y-6"
     >
       {/* Chart Selector */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-3 mb-6">
         {charts.map((chart) => (
           <motion.button
             key={chart.id}
             onClick={() => setActiveChart(chart.id)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`px-4 py-2 rounded-lg font-mono text-sm transition border flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl font-mono text-sm transition-all duration-200 border flex items-center gap-2 ${
               activeChart === chart.id
-                ? 'bg-debris-info border-debris-info'
-                : 'bg-space-700 border-space-600 hover:border-space-500'
+                ? 'bg-neon-blue border-neon-blue text-white shadow-glow-blue'
+                : 'bg-astronaut-700 border-astronaut-600 text-gray-300 hover:border-neon-cyan hover:shadow-glow-cyan'
             }`}
           >
             <chart.Icon className="w-4 h-4" />
@@ -89,7 +90,10 @@ export const ChartPanel = () => {
           animate={{ opacity: 1, y: 0 }}
           className="panel"
         >
-          <h3 className="text-lg font-semibold mb-4">Fuel Consumption</h3>
+          <h3 className="text-lg font-semibold mb-5 flex items-center gap-3">
+            <Zap className="w-5 h-5 text-neon-blue" />
+            <span className="bg-gradient-to-r from-neon-blue to-neon-cyan bg-clip-text text-transparent uppercase tracking-wide">Fuel Consumption</span>
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={generateFuelData()}>
               <defs>
@@ -98,16 +102,17 @@ export const ChartPanel = () => {
                   <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2A3558" />
               <XAxis dataKey="time" stroke="#9ca3af" />
               <YAxis stroke="#9ca3af" />
-              <Tooltip contentStyle={{ backgroundColor: '#1a2568', border: 'none' }} />
+              <Tooltip contentStyle={{ backgroundColor: '#0B0F1A', border: '1px solid #3B82F6', borderRadius: '8px' }} />
               <Line
                 type="monotone"
                 dataKey="fuel"
                 stroke="#3b82f6"
                 dot={{ fill: '#3b82f6', r: 4 }}
                 activeDot={{ r: 6 }}
+                strokeWidth={2.5}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -121,14 +126,17 @@ export const ChartPanel = () => {
           animate={{ opacity: 1, y: 0 }}
           className="panel"
         >
-          <h3 className="text-lg font-semibold mb-4">Risk Level by Phase</h3>
+          <h3 className="text-lg font-semibold mb-5 flex items-center gap-3">
+            <BarChart3 className="w-5 h-5 text-status-warning" />
+            <span className="bg-gradient-to-r from-status-warning to-amber-500 bg-clip-text text-transparent uppercase tracking-wide">Risk Level by Phase</span>
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={generateRiskData()}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2A3558" />
               <XAxis dataKey="phase" stroke="#9ca3af" />
               <YAxis stroke="#9ca3af" />
-              <Tooltip contentStyle={{ backgroundColor: '#1a2568', border: 'none' }} />
-              <Bar dataKey="risk" fill="#f59e0b" radius={[8, 8, 0, 0]} />
+              <Tooltip contentStyle={{ backgroundColor: '#0B0F1A', border: '1px solid #F59E0B', borderRadius: '8px' }} />
+              <Bar dataKey="risk" fill="#F59E0B" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </motion.div>
@@ -141,36 +149,39 @@ export const ChartPanel = () => {
           animate={{ opacity: 1, y: 0 }}
           className="panel"
         >
-          <h3 className="text-lg font-semibold mb-4">Uncertainty vs Confidence</h3>
+          <h3 className="text-lg font-semibold mb-5 flex items-center gap-3">
+            <TrendingUp className="w-5 h-5 text-neon-purple" />
+            <span className="bg-gradient-to-r from-neon-purple to-pink-500 bg-clip-text text-transparent uppercase tracking-wide">Uncertainty vs Confidence</span>
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={generateUncertaintyData()}>
               <defs>
                 <linearGradient id="uncertaintyGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#EF4444" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#EF4444" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="confidenceGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#22C55E" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2A3558" />
               <XAxis dataKey="time" stroke="#9ca3af" />
               <YAxis stroke="#9ca3af" />
-              <Tooltip contentStyle={{ backgroundColor: '#1a2568', border: 'none' }} />
+              <Tooltip contentStyle={{ backgroundColor: '#0B0F1A', border: '1px solid #8B5CF6', borderRadius: '8px' }} />
               <Legend />
               <Area
                 type="monotone"
                 dataKey="uncertainty"
                 stackId="1"
-                stroke="#ef4444"
+                stroke="#EF4444"
                 fill="url(#uncertaintyGradient)"
               />
               <Area
                 type="monotone"
                 dataKey="confidence"
                 stackId="1"
-                stroke="#10b981"
+                stroke="#22C55E"
                 fill="url(#confidenceGradient)"
               />
             </AreaChart>

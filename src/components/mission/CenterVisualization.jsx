@@ -31,20 +31,20 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="w-full h-full flex flex-col bg-space-900"
+      className="w-full h-full flex flex-col bg-astronaut-900"
     >
       {/* Tab Navigation */}
-      <div className="flex gap-2 p-4 border-b border-space-700 overflow-x-auto">
+      <div className="flex gap-2 p-5 border-b border-astronaut-600 overflow-x-auto bg-astronaut-800 shadow-card">
         {tabs.map((tab) => (
           <motion.button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`px-4 py-2 rounded-lg font-mono text-sm font-bold whitespace-nowrap transition border flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl font-mono text-sm font-bold whitespace-nowrap transition-all duration-200 border flex items-center gap-2 ${
               activeTab === tab.id
-                ? 'bg-debris-info border-debris-info text-space-900'
-                : 'bg-space-700 border-space-600 text-white hover:border-space-500'
+                ? 'bg-neon-blue border-neon-blue text-white shadow-glow-blue'
+                : 'bg-astronaut-700 border-astronaut-600 text-gray-300 hover:border-neon-cyan hover:shadow-glow-cyan'
             }`}
           >
             <tab.Icon className="w-4 h-4" />
@@ -61,7 +61,7 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="w-full h-full p-4"
+            className="w-full h-full p-6"
           >
             <OrbitMap selectedCluster={selectedCluster} />
           </motion.div>
@@ -73,11 +73,11 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-4 space-y-6"
+            className="p-6 space-y-8"
           >
-            <h2 className="text-2xl font-bold">Mission Planning</h2>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-neon-blue to-neon-cyan bg-clip-text text-transparent uppercase tracking-wider">Mission Planning</h2>
             <MissionTimelineStepper />
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-8">
               <LaunchWindowCard />
               <ClusterDiscoveryCard onSelectCluster={onSelectCluster} />
               <TargetRankingCard />
@@ -92,10 +92,10 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-4 space-y-6"
+            className="p-6 space-y-8"
           >
-            <h2 className="text-2xl font-bold">Live Execution</h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-status-warning to-amber-500 bg-clip-text text-transparent uppercase tracking-wider">Live Execution</h2>
+            <div className="grid md:grid-cols-2 gap-8">
               <CaptureRecommendationCard />
               <EventLogPanel />
               <HealthStatusPanel />
@@ -110,9 +110,9 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-4 space-y-6"
+            className="p-6 space-y-8"
           >
-            <h2 className="text-2xl font-bold">Mission Metrics</h2>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-neon-cyan to-neon-blue bg-clip-text text-transparent uppercase tracking-wider">Mission Metrics</h2>
             <MetricCards />
             <ChartPanel />
           </motion.div>
@@ -124,10 +124,10 @@ export const CenterVisualization = ({ selectedCluster, onSelectCluster }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-4 space-y-6"
+            className="p-6 space-y-8"
           >
-            <h2 className="text-2xl font-bold">Safety & Risk Assessment</h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-status-danger to-neon-pink bg-clip-text text-transparent uppercase tracking-wider">Safety & Risk Assessment</h2>
+            <div className="grid md:grid-cols-2 gap-8">
               <div className="md:col-span-1">
                 <RiskStatusPanel />
               </div>
