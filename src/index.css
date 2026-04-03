@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-space-900 text-white;
+  }
+
+  h1 {
+    @apply text-3xl font-bold;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+
+  h3 {
+    @apply text-xl font-semibold;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-space-800 border border-space-700 rounded-lg p-6 shadow-lg;
+  }
+
+  .card {
+    @apply bg-space-700 border border-space-600 rounded-lg p-4 shadow;
+  }
+
+  .metric-box {
+    @apply flex flex-col items-center p-4 bg-space-700 rounded-lg border border-space-600;
+  }
+
+  .btn-primary {
+    @apply px-6 py-2 bg-debris-info hover:bg-blue-600 rounded-lg font-medium transition-colors;
+  }
+
+  .btn-success {
+    @apply px-6 py-2 bg-debris-success hover:bg-green-600 rounded-lg font-medium transition-colors;
+  }
+
+  .btn-danger {
+    @apply px-6 py-2 bg-debris-danger hover:bg-red-600 rounded-lg font-medium transition-colors;
+  }
+
+  .text-sm-light {
+    @apply text-xs text-gray-400;
+  }
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out;
+}
