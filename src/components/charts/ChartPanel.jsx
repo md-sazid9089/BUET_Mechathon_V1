@@ -51,9 +51,9 @@ export const ChartPanel = () => {
   const [activeChart, setActiveChart] = useState('fuel')
 
   const charts = [
-    { id: 'fuel', label: 'Fuel Usage', icon: '⛽' },
-    { id: 'risk', label: 'Risk Trend', icon: '📊' },
-    { id: 'uncertainty', label: 'Uncertainty', icon: '📈' },
+    { id: 'fuel', label: 'Fuel Usage', Icon: Fuel },
+    { id: 'risk', label: 'Risk Trend', Icon: BarChart3 },
+    { id: 'uncertainty', label: 'Uncertainty', Icon: TrendingUp },
   ]
 
   return (
@@ -70,13 +70,14 @@ export const ChartPanel = () => {
             onClick={() => setActiveChart(chart.id)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`px-4 py-2 rounded-lg font-mono text-sm transition border ${
+            className={`px-4 py-2 rounded-lg font-mono text-sm transition border flex items-center gap-2 ${
               activeChart === chart.id
                 ? 'bg-debris-info border-debris-info'
                 : 'bg-space-700 border-space-600 hover:border-space-500'
             }`}
           >
-            {chart.icon} {chart.label}
+            <chart.Icon className="w-4 h-4" />
+            {chart.label}
           </motion.button>
         ))}
       </div>

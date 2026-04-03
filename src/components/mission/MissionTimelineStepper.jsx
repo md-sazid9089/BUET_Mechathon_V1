@@ -1,23 +1,35 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Check, ChevronRight } from 'lucide-react'
+import { Check, ChevronRight, Radar, Search, Rocket, BarChart3, Map, Zap, RefreshCcw, ClipboardList, Target } from 'lucide-react'
 import { useMissionStore } from '../../store/missionStore'
 import { MISSION_STEPS } from '../../data/mockData'
+
+const IconMap = {
+  radar: Radar,
+  search: Search,
+  rocket: Rocket,
+  chart: BarChart3,
+  map: Map,
+  zap: Zap,
+  refresh: RefreshCcw,
+  clipboard: ClipboardList,
+  target: Target,
+}
 
 export const MissionTimelineStepper = () => {
   const currentStep = useMissionStore((state) => state.currentStep)
 
   const steps = [
-    { step: 0, label: 'Predict', icon: '📡', desc: 'Debris Trajectory' },
-    { step: 1, label: 'Cluster', icon: '🔍', desc: 'Cluster Discovery' },
-    { step: 2, label: 'Launch', icon: '🚀', desc: 'Window Select' },
-    { step: 3, label: 'Rank', icon: '📊', desc: 'Target Priority' },
-    { step: 4, label: 'Route', icon: '🗺️', desc: 'Path Planning' },
-    { step: 5, label: 'Track', icon: '📡', desc: 'Live Tracking' },
-    { step: 6, label: 'Capture', icon: '🎯', desc: 'Capture Method' },
-    { step: 7, label: 'Avoid', icon: '⚡', desc: 'Collision Avoidance' },
-    { step: 8, label: 'Replan', icon: '♻️', desc: 'Dynamic Replan' },
-    { step: 9, label: 'Report', icon: '📋', desc: 'Final Report' },
+    { step: 0, label: 'Predict', icon: 'radar', desc: 'Debris Trajectory' },
+    { step: 1, label: 'Cluster', icon: 'search', desc: 'Cluster Discovery' },
+    { step: 2, label: 'Launch', icon: 'rocket', desc: 'Window Select' },
+    { step: 3, label: 'Rank', icon: 'chart', desc: 'Target Priority' },
+    { step: 4, label: 'Route', icon: 'map', desc: 'Path Planning' },
+    { step: 5, label: 'Track', icon: 'radar', desc: 'Live Tracking' },
+    { step: 6, label: 'Capture', icon: 'target', desc: 'Capture Method' },
+    { step: 7, label: 'Avoid', icon: 'zap', desc: 'Collision Avoidance' },
+    { step: 8, label: 'Replan', icon: 'refresh', desc: 'Dynamic Replan' },
+    { step: 9, label: 'Report', icon: 'clipboard', desc: 'Final Report' },
   ]
 
   return (
@@ -60,7 +72,7 @@ export const MissionTimelineStepper = () => {
               </motion.div>
 
               {/* Icon & Label */}
-              <span className="text-lg">{step.icon}</span>
+              {React.createElement(IconMap[step.icon], { className: 'w-5 h-5 text-debris-info' })}
               <div className="text-xs font-mono font-bold text-center">{step.label}</div>
               <div className="text-xs text-gray-400 text-center max-w-[60px]">{step.desc}</div>
 

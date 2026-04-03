@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, XCircle, CheckCircle, Info } from 'lucide-react'
 import { useMissionStore } from '../../../store/missionStore'
 
 export const EventLogPanel = () => {
@@ -22,13 +22,13 @@ export const EventLogPanel = () => {
   const getEventIcon = (type) => {
     switch (type) {
       case 'error':
-        return '❌'
+        return XCircle
       case 'success':
-        return '✅'
+        return CheckCircle
       case 'warning':
-        return '⚠️'
+        return AlertTriangle
       default:
-        return 'ℹ️'
+        return Info
     }
   }
 
@@ -47,7 +47,9 @@ export const EventLogPanel = () => {
         {eventLog.length === 0 ? (
           <div className="text-sm text-gray-400 p-4 text-center">No events yet</div>
         ) : (
-          eventLog.map((event, idx) => (
+          eventLog.map((event, idx) => {
+            const IconComponent = getEventIcon(event.type)
+            return (
             <motion.div
               key={event.id}
               initial={{ x: 100, opacity: 0 }}
@@ -56,14 +58,15 @@ export const EventLogPanel = () => {
               className={`p-3 rounded-lg ${getEventStyle(event.type)}`}
             >
               <div className="flex items-start gap-2">
-                <span className="text-lg flex-shrink-0">{getEventIcon(event.type)}</span>
+                <IconComponent className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
                   <div className="font-mono text-xs font-bold mb-1">{event.timestamp}</div>
                   <div className="text-sm break-words">{event.message}</div>
                 </div>
               </div>
             </motion.div>
-          ))
+          )
+          })
         )}
       </div>
 
